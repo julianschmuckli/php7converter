@@ -2,7 +2,7 @@
 //Fehler anzeigen
 ini_set('display_errors',0);
 ini_set('display_startup_errors',0);
-error_reporting(-1);
+error_reporting(0);
 	//Convert Process
 	$dir = str_replace("/","\\",trim(htmlspecialchars($_POST["dir"])));
 	$connection_variable = trim(htmlspecialchars($_POST["connection_variable"]));
@@ -19,23 +19,24 @@ error_reporting(-1);
 		$pathinfo = pathinfo(("$dir".'\\'.$directorys[$i]));
 		if($pathinfo['extension']=="php"){
 			$code = file_get_contents("$dir".'\\'.$directorys[$i]);
-			$code = str_replace("mysql_query(",'mysqli_query($con,',$code,$count_query_changes);
-			$code = str_replace("mysql_real_escape_string(",'mysqli_real_escape_string($con,',$code,$count_mysql_real_escape);
-			$code = str_replace("mysql_connect(",'$con = mysqli_connect(',$code,$count_mysql_connect);
-			$code = str_replace("mysql_select_db(",'mysqli_select_db($con,',$code,$count_mysql_select_db);
-			$code = str_replace("mysql_error()",'mysqli_error($con)',$code,$count_mysql_error);
-			$code = str_replace("mysql_set_charset(",'mysqli_set_charset($con,',$code,$count_mysql_charset);
-			$code = str_replace("mysql_","mysqli_",$code,$count_mysql_changes);
-			//Verschönerungen
-			$code = str_replace("{
+			$code = str_ireplace("mysql_query(",'mysqli_query($con,',$code,$count_query_changes);
+			$code = str_ireplace("mysql_real_escape_string(",'mysqli_real_escape_string($con,',$code,$count_mysql_real_escape);
+			$code = str_ireplace("mysql_connect(",'$con = mysqli_connect(',$code,$count_mysql_connect);
+			$code = str_ireplace("mysql_select_db(",'mysqli_select_db($con,',$code,$count_mysql_select_db);
+			$code = str_ireplace("mysql_error()",'mysqli_error($con)',$code,$count_mysql_error);
+			$code = str_ireplace("mysql_set_charset(",'mysqli_set_charset($con,',$code,$count_mysql_charset);
+			$code = str_ireplace("mysql_affected_rows(",'mysqli_affected_rows($con,',$code);
+			$code = str_ireplace("mysql_","mysqli_",$code,$count_mysql_changes);
+			//VerschÃ¶nerungen
+			$code = str_ireplace("{
 			if",'{
 				if',$code);
-			$code = str_replace("}
+			$code = str_ireplace("}
 			}",'}
 		}',$code);
 			if($connection_variable!=""){
-				$code = str_replace("$connection_variable =","",$code);
-				$code = str_replace("$connection_variable=","",$code);
+				$code = str_ireplace("$connection_variable =","",$code);
+				$code = str_ireplace("$connection_variable=","",$code);
 			}
 			file_put_contents("$dir".'\\'.$directorys[$i],$code);
 			//Totale Berechnungen
@@ -49,10 +50,10 @@ error_reporting(-1);
 			
 			$total_changes=$count_mysql_changes+$count_mysql_charset+$count_mysql_connect+$count_mysql_error+$count_mysql_real_escape+$count_mysql_select_db+$count_query_changes;
 			
-			echo "<span style='color:green;'>Log.Success</span> ".date("H:i:s")." "."$dir".'\\'.$directorys[$i]." <b>converted</b><br>
+			echo "<span style='color:green;'>Log.Success</span> ".date("d.m.Y H:i:s")." "."$dir".'\\'.$directorys[$i]." <b>converted</b><br>
 			<i>$total_changes</i> Total Changes";
 		}else{
-			echo "<span style='color:blue;'>Log.Hint</span> ".date("H:i:s")." "."$dir".'\\'.$directorys[$i]." is not a PHP-File and can't be converted.";
+			echo "<span style='color:blue;'>Log.Hint</span> ".date("d.m.Y H:i:s")." "."$dir".'\\'.$directorys[$i]." is not a PHP-File and can't be converted.";
 		}
 		echo "<br>";
 	}
