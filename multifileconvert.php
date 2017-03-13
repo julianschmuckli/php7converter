@@ -25,7 +25,7 @@ error_reporting(0);
 			$code = str_ireplace("mysql_select_db(",'mysqli_select_db($con,',$code,$count_mysql_select_db);
 			$code = str_ireplace("mysql_error()",'mysqli_error($con)',$code,$count_mysql_error);
 			$code = str_ireplace("mysql_set_charset(",'mysqli_set_charset($con,',$code,$count_mysql_charset);
-			$code = str_ireplace("mysql_affected_rows(",'mysqli_affected_rows($con,',$code);
+			$code = str_ireplace("mysql_affected_rows(",'mysqli_affected_rows($con',$code,$count_mysql_affected_rows);
 			$code = str_ireplace("mysql_","mysqli_",$code,$count_mysql_changes);
 			//Verschönerungen
 			$code = str_ireplace("{
@@ -38,7 +38,9 @@ error_reporting(0);
 				$code = str_ireplace("$connection_variable =","",$code);
 				$code = str_ireplace("$connection_variable=","",$code);
 			}
-			file_put_contents("$dir".'\\'.$directorys[$i],$code);
+			if($_POST["write"]==""){
+				file_put_contents("$dir".'\\'.$directorys[$i],$code);
+			}
 			//Totale Berechnungen
 			$total_count_query_changes+=$count_query_changes;
 			$total_count_mysql_real_escape+=$count_mysql_real_escape;
@@ -46,9 +48,10 @@ error_reporting(0);
 			$total_count_mysql_charset+=$count_mysql_charset;
 			$total_count_mysql_error+=$count_mysql_error;
 			$total_count_mysql_connect+=$count_mysql_connect;
-			$total_count_mysql_select_db+=$count_mysql_select_db;			
+			$total_count_mysql_select_db+=$count_mysql_select_db;
+			$total_count_mysql_affected_rows+=$count_mysql_affected_rows;
 			
-			$total_changes=$count_mysql_changes+$count_mysql_charset+$count_mysql_connect+$count_mysql_error+$count_mysql_real_escape+$count_mysql_select_db+$count_query_changes;
+			$total_changes=$count_mysql_changes+$count_mysql_charset+$count_mysql_connect+$count_mysql_error+$count_mysql_real_escape+$count_mysql_select_db+$count_query_changes+$count_mysql_affected_rows;
 			
 			echo "<span style='color:green;'>Log.Success</span> ".date("d.m.Y H:i:s")." "."$dir".'\\'.$directorys[$i]." <b>converted</b><br>
 			<i>$total_changes</i> Total Changes";
@@ -102,6 +105,10 @@ error_reporting(0);
 				<tr>
 					<td><?php echo $total_count_mysql_real_escape; ?></td>
 					<td>"mysql_real_escape_string" Changes</td>				
+				</tr>
+				<tr>
+					<td><?php echo $total_count_mysql_affected_rows; ?></td>
+					<td>"mysql_affected_rows" Changes</td>				
 				</tr>
 				<tr>
 					<td><?php echo $total_count_mysql_changes; ?></td>
