@@ -20,8 +20,9 @@
 			<br>
 			<input type="text" class="form-control" style="width:100%;margin-left:auto;margin-right:auto;" autocomplete="off" placeholder="Previous Connection variable (with $)" name="connection_variable">
 			<br>
-			<input type="submit" class="btn btn-default" style="width:100%;margin-left:auto;margin-right:auto;" value="Convert">
+			<input type="checkbox" id="write" name="write"><label for="write">Just create log, no changes will affect to the files.</label>
 			<br>
+			<input type="submit" class="btn btn-default" style="width:100%;margin-left:auto;margin-right:auto;" value="Convert">
 			<p>PHP 7 Converter by Julian Schmuckli<br>Version 1.1</p><br>
 			<p>* Required</p>
 		</form><br>
